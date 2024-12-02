@@ -2,7 +2,11 @@
 name = "puzzle"
 version = "0.1.0"
 edition = "2021"
-default-run = "day01"
+default-run = "day02"
+
+[[bin]]
+name = "day02"
+path = "src/day02.rs"
 
 [[bin]]
 name = "day01"
