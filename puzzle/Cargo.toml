@@ -2,7 +2,11 @@
 name = "puzzle"
 version = "0.1.0"
 edition = "2021"
-default-run = "day02"
+default-run = "day03"
+
+[[bin]]
+name = "day03"
+path = "src/day03.rs"
 
 [[bin]]
 name = "day02"
@@ -13,3 +17,4 @@ name = "day01"
 path = "src/day01.rs"
 
 [dependencies]
+regex = "1.11.1"
