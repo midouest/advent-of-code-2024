@@ -1,9 +1,10 @@
+use rayon::prelude::*;
 use std::{collections::HashSet, error::Error, fs::read_to_string, str::FromStr, time::Instant};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let input = read_to_string("input/day06.txt")?;
     let now = Instant::now();
-    println!("p1: {} ({}us)", part1(&input)?, now.elapsed().as_micros());
+    println!("p1: {} ({}µs)", part1(&input)?, now.elapsed().as_micros());
     let now = Instant::now();
     println!("p2: {} ({}ms)", part2(&input)?, now.elapsed().as_millis());
     Ok(())
@@ -89,19 +90,22 @@ fn part1(input: &str) -> Result<usize, Box<dyn Error>> {
 
 fn part2(input: &str) -> Result<usize, Box<dyn Error>> {
     let sim0: Sim = input.parse()?;
-    let mut loops = HashSet::new();
-    for (p0, _) in sim0.iter() {
-        let mut sim1 = sim0.clone();
-        sim1.map.insert(p0);
-        let mut vis = HashSet::new();
-        for state in sim1.iter() {
-            if vis.contains(&state) {
-                loops.insert(p0);
-                break;
+    let loops = sim0
+        .iter()
+        .par_bridge()
+        .flat_map(|(p0, _)| {
+            let mut sim1 = sim0.clone();
+            sim1.map.insert(p0);
+            let mut vis = HashSet::new();
+            for state in sim1.iter() {
+                if vis.contains(&state) {
+                    return Some(p0);
+                }
+                vis.insert(state);
             }
-            vis.insert(state);
-        }
-    }
+            None
+        })
+        .collect::<HashSet<_>>();
     Ok(loops.len())
 }
 

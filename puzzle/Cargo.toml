@@ -29,4 +29,5 @@ name = "day01"
 path = "src/day01.rs"
 
 [dependencies]
+rayon = "1.10.0"
 regex = "1.11.1"
